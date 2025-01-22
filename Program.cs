@@ -11,7 +11,6 @@ namespace StudentListMVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Configuration.AddEnvironmentVariables();
             var connection = String.Empty;
             if (builder.Environment.IsDevelopment())
             {
@@ -20,12 +19,11 @@ namespace StudentListMVC
             }
             else
             {
-                connection = Environment.GetEnvironmentVariable("StudentsDb");
+                builder.Configuration.AddEnvironmentVariables();
+                connection = builder.Configuration.GetConnectionString("StudentsDb");
             }
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
             builder.Services.AddTransient<IStudent, StudentRepository>();
-
-            builder.Configuration.AddEnvironmentVariables();
 
             var app = builder.Build();
 
